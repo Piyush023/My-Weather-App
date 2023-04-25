@@ -1,58 +1,23 @@
-import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
-import Form from "react-bootstrap/Form";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import "./Components.css";
-import axios from "axios";
+import SearchBox from "./SearchBox";
 
 function AppForm() {
-  const API_KEY = `87a79624edaa6a528d7be1d31ca3b070`;
 
   const [details, setDetails] = useState({});
 
   const [place, setPlace] = useState("");
 
-  const handleCityChange = (e) => {
-      setPlace(e.target.value);
-  };
-
-  let cityKaNaam = place;
-
-  const getWeatherDetails = (cityKaNaam) => {
-    const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityKaNaam}&units=metric&appid=${API_KEY}`;
-    axios
-      .get(URL)
-      .then((res) => {
-        setDetails(res.data);
-      })
-      .catch((err) => {
-        console.log("error", err);
-      });
-  };
+  const placeAndDetailCallback = useCallback((loc,detail) => {
+    setPlace(loc)
+    setDetails(detail)
+  }, [])
 
   return (
     <>
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="text"
-            placeholder="Enter City"
-            onChange={handleCityChange}
-          />
-        </Form.Group>
-        <div className="d-grid">
-          <Button
-            variant="outline-dark"
-            type="button"
-            className="buttonStyle"
-            size="lg"
-            onClick={getWeatherDetails(cityKaNaam)}
-          >
-            Search
-          </Button>
-        </div>
-      </Form>
+    <SearchBox placeAndDetailCallback={placeAndDetailCallback} />
       <Card style={{ width: "18rem" }}>
         <Card.Body className="text-center">
           <Card.Title className="cardTitle">
